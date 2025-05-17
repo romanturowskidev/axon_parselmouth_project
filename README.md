@@ -1,42 +1,42 @@
-# Parselmouth Voice Analysis
+# Axon Parselmouth Project
 
-This project is based on the [Praat-Parselmouth](https://github.com/YannickJadoul/Parselmouth) library and enables automatic analysis of voice features and generation of detailed text-based acoustic reports.
+This project contains a set of voice analysis tools built on [Parselmouth](https://github.com/YannickJadoul/Parselmouth), a Python wrapper for Praat. It enables automated extraction of acoustic parameters from speech recordings and generates detailed textual reports for research and analysis.
 
-## 🔍 What does this project do?
+## 🔍 Features
 
-- Generates a synthetic test audio file or analyzes provided `.wav` files
-- Extracts core acoustic features:
-  - Pitch (F0)
-  - Intensity (loudness)
-  - Jitter and Shimmer (voice stability)
-  - HNR (Harmonics-to-Noise Ratio)
-  - Formants (F1–F3)
-- Creates a `.txt` report with interpretation guidelines
+- Fundamental frequency (F0) extraction
+- Intensity profile analysis
+- Voice stability metrics: Jitter, Shimmer
+- Harmonics-to-Noise Ratio (HNR)
+- Cepstral Peak Prominence (CPP)
+- Formant tracking (F1–F3)
+- Speech fluency and pause analysis
+- Multi-report generator with batch support
 
-## Requirements
+## 🚀 How to Run
 
-- Python 3.8+
-- Parselmouth
-- NumPy
-- SciPy (used for generating synthetic audio)
+```bash
+./run_all_parselmouth_solutions.sh
+```
 
-## Install dependencies:
+Output reports are saved in the `parselmouth_reports/` directory.
 
-`pip install praat-parselmouth numpy scipy`
+## 📦 Installation
 
+Install dependencies using:
 
-## How to run?
+```bash
+pip install -r requirements.txt
+```
 
-`./run_all_parselmouth_solutions.sh`
+## 🧪 Files Overview
 
-The generated report will be saved in the `parselmouth_reports` directory.
+- `01_...py` to `11_...py`: Modular analysis scripts
+- `test_audio/`: Folder with `.wav` audio files
+- `parselmouth_reports/`: Output reports in `.txt` format
+- `run_all_parselmouth_solutions.sh`: Batch script to run all analyses
+- `README.md`, `CHANGELOG.md`, `LICENSE`: Documentation and metadata
 
+## 📄 License
 
-## Disclaimer
-
-This project does not provide a medical diagnosis. Acoustic feature values should be interpreted carefully and in the appropriate clinical or research context.
-
-
-## License
-
-AXON DAO
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
