@@ -9,7 +9,7 @@ Shimmer (local, dB): Not available
 
 Warnings:
 ---------
-- Could not extract Shimmer – Cannot convert argument "<parselmouth.Data object at 0x10858d7b0>" to a known Praat argument type
+- Could not extract Shimmer – Cannot convert argument "<parselmouth.Data object at 0x10a6181b0>" to a known Praat argument type
 
 Interpretation Notes:
 - ↑ F0 = higher pitch (stress, tension); ↓ F0 = fatigue or depression
