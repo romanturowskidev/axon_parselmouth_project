@@ -1,0 +1,22 @@
+Prosodic Variability Analysis Report for: test_audio_3.wav
+--------------------------------------------------------
+
+Pitch Variability (F0 Standard Deviation):
+  Standard Deviation of Pitch (F0): 26.45 Hz
+  Interpretation Guide: Higher values indicate more pitch modulation (dynamic intonation), while lower values suggest a more monotonous pitch (monopitch).
+
+Intensity Variability (Loudness Standard Deviation):
+  Standard Deviation of Intensity: 8.96 dB
+  Interpretation Guide: Higher values indicate more dynamic use of loudness, while lower values suggest monoloudness.
+
+Conceptual Analysis of Pitch and Intensity Contours:
+  Advanced analysis would involve examining the actual contours (patterns of rise and fall) of pitch and intensity over time.
+  Techniques might include:
+    - Identifying pitch inflections
+    - Analyzing shape of intonational phrases
+    - Correlating with linguistic units
+
+General Notes:
+- These are acoustic measurements, not a medical diagnosis.
+- Interpretation should be done by a qualified professional.
+- Contour analysis provides more detail than global statistics.

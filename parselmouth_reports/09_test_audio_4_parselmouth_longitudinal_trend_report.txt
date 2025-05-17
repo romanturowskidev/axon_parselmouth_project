@@ -1,0 +1,17 @@
+Parselmouth Longitudinal Trend Report for: test_audio_4.wav
+============================================================
+
+Mean F0: 120.08 Hz
+Mean Intensity: 52.22 dB
+HNR: -95.73 dB
+Jitter (local): 0.02 
+Shimmer (local, dB): Not available
+
+Warnings:
+---------
+- Could not extract Shimmer – Cannot convert argument "<parselmouth.Data object at 0x108275e30>" to a known Praat argument type
+
+Interpretation Notes:
+- ↑ F0 = higher pitch (stress, tension); ↓ F0 = fatigue or depression
+- ↑ Jitter/Shimmer = vocal instability (neurological or phonatory disorders)
+- ↓ HNR = breathy/hoarse voice; ↑ HNR = clearer phonation

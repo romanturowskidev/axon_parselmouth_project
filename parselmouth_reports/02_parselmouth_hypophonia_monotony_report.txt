@@ -1,0 +1,22 @@
+Hypophonia and Monotony Analysis Report for: dummy_audio_hypophonia.wav
+-----------------------------------------------------------
+
+Intensity Analysis (Hypophonia Indicators):
+  Mean Intensity: 80.51 dB
+  Interpretation Guide (Hypophonia): Lower mean intensity values can suggest hypophonia (abnormally quiet voice), a common symptom in conditions like Parkinson's disease. Typical conversational speech is around 60-70 dB SPL.
+
+Pitch and Intensity Variability (Monotony Indicators):
+  Standard Deviation of Pitch (F0): 0.00 Hz
+  Interpretation Guide (Pitch Monotony): A lower SD of F0 indicates less pitch variation (monopitch), which may signal motor speech issues or emotional blunting.
+
+  Standard Deviation of Intensity: 0.00 dB
+  Interpretation Guide (Loudness Monotony): A lower SD of intensity suggests less loudness variation (monoloudness), linked to impaired motor control or emotion.
+
+Additional Pitch Information:
+  Mean Pitch (F0): 110.00 Hz
+
+General Notes:
+- These values are acoustic measurements and not a medical diagnosis.
+- Interpretation should be done by a qualified professional.
+- Values can be affected by recording quality, microphone, environment, and speech task.
+- 'Not available' may indicate audio issues or analysis limitations.

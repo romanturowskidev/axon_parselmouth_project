@@ -1,0 +1,21 @@
+Vocal Effort and Strain Indicator Report for: test_audio_1.wav
+=============================================================
+
+Intensity Levels (Effort Indicators):
+  Mean Intensity: 44.89 dB
+  Maximum Intensity: 64.54 dB
+  Interpretation Guide: High values → vocal effort, low values → fatigue or quiet speech.
+
+Vocal Stability (Strain Indicators - Jitter & Shimmer):
+  Jitter (local): 2.56%
+  Shimmer (local, dB): Not available
+  Interpretation Guide: High values may suggest strain or instability.
+
+Combined Interpretation:
+  - High intensity + high jitter/shimmer → possible vocal strain.
+  - Low intensity + high jitter/shimmer → weak/unstable voice.
+  - Use for monitoring fatigue or effort over time.
+
+General Notes:
+- Acoustic parameters are sensitive to recording conditions.
+- Interpret results in clinical or task context.

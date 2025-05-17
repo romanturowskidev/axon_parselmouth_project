@@ -1,0 +1,19 @@
+Baseline Acoustic Report for: test_audio_6.wav
+===============================================
+
+Pitch Profile:
+  Mean f0 hz: 102.44 Hz
+  Min f0 hz: 97.01 Hz
+  Max f0 hz: 162.83 Hz
+  Sd f0 hz: 3.47 Hz
+
+Intensity Profile:
+  Mean intensity db: 32.22 dB
+  Min intensity db: -20.64 dB
+  Max intensity db: 58.51 dB
+  Sd intensity db: 26.76 dB
+
+Interpretation Notes:
+- Mean F0 indicates average pitch (higher = more tense, lower = more relaxed).
+- SD F0 indicates pitch variability (low = monotony).
+- Intensity stats reflect loudness; lower values may suggest hypophonia.

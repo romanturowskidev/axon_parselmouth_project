@@ -1,0 +1,18 @@
+Speech Fluency and Pause Analysis Report for: test_audio_3.wav
+------------------------------------------------------------
+
+Total Duration: 18.39 s
+Phonation Time: 0.00 s
+Total Pause Duration: 0.00 s
+Number of Pauses: 0
+Mean Pause Duration: N/A
+
+Speech Rate: 1.09 syll/s
+Articulation Rate: N/A
+Avg Syllable Duration: N/A
+
+Segmentation Preview (first 10 segments):
+
+Notes:
+- Placeholder syllable count = 20
+- Adjust for better accuracy using real count.

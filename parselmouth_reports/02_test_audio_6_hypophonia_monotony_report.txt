@@ -1,0 +1,20 @@
+Hypophonia and Monotony Analysis Report for: test_audio_6.wav
+-----------------------------------------------------------
+
+Intensity Analysis (Hypophonia Indicators):
+  Mean Intensity: 32.22 dB
+  Interpretation Guide (Hypophonia): Lower mean intensity values can suggest hypophonia.
+
+Pitch and Intensity Variability (Monotony Indicators):
+  Standard Deviation of Pitch (F0): 3.47 Hz
+  Lower SD of F0 = less pitch variation = possible monotony.
+
+  Standard Deviation of Intensity: 26.76 dB
+  Lower SD of intensity = possible loudness monotony.
+
+Additional Pitch Info:
+  Mean Pitch (F0): 102.44 Hz
+
+General Notes:
+- Acoustic values only; not a diagnosis.
+- Consider recording quality and context.

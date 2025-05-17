@@ -1,0 +1,14 @@
+Voice Clarity Assessment Report for: test_audio_2.wav
+=====================================================
+
+Harmonics-to-Noise Ratio (HNR):
+  Mean HNR: 23.62 dB
+  Interpretation:
+    - Higher HNR = clearer, more harmonic voice
+    - Lower HNR = breathy, hoarse, or noisy phonation
+    - Healthy voices often show HNR > 20 dB
+
+General Notes:
+- HNR reflects the clarity and periodicity of the voice.
+- Low HNR may indicate vocal instability, breathiness, or pathology.
+- Interpretation depends on context and recording quality.

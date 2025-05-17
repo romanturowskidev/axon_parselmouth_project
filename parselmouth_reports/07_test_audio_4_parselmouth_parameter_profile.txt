@@ -1,0 +1,15 @@
+Fundamental Vocal Parameter Profile Report
+For recording: test_audio_4.wav
+----------------------------------------------------------
+
+Mean Pitch (F0): 120.08 Hz
+Mean Intensity: 52.22 dB
+HNR: 12.14 dB
+Jitter (local): Not available
+Shimmer (local, dB): Not available
+
+Interpretation Notes:
+- ↑ F0 = higher pitch (stress, arousal); ↓ F0 = fatigue or low tone.
+- ↑ Jitter/Shimmer = unstable phonation; ↓ = stable voice.
+- ↓ HNR = breathy or hoarse; ↑ = clear and steady voice.
+- Results depend on task, microphone, and health status.
