@@ -1,16 +1,17 @@
 """
 Solution 7: Fundamental Vocal Parameter Shift Analysis using Parselmouth
 
-This script loads two audio files (representing different time points or conditions),
- extracts key acoustic parameters (mean F0, mean intensity, HNR, jitter, shimmer)
- from both using Parselmouth, compares these parameters, generates a textual summary
- of the shifts, and saves it to a report file.
+This script loads audio files, extracts key acoustic parameters (mean F0, mean intensity, HNR, jitter, shimmer)
+using Parselmouth, generates a textual summary of the parameter profile,
+and saves it to a report file.
 """
 
 import parselmouth
 from parselmouth.praat import call
 import numpy as np
 import os
+import sys
+import uuid
 
 def load_audio(audio_file_path):
     try:
@@ -23,19 +24,22 @@ def extract_mean_f0(sound, pitch_floor=75, pitch_ceiling=600):
     try:
         pitch = sound.to_pitch_ac(pitch_floor=pitch_floor, pitch_ceiling=pitch_ceiling)
         return call(pitch, "Get mean", 0, 0, "Hertz")
-    except: return np.nan
+    except:
+        return np.nan
 
 def extract_mean_intensity(sound):
     try:
         intensity = sound.to_intensity()
         return call(intensity, "Get mean", 0, 0, "dB")
-    except: return np.nan
+    except:
+        return np.nan
 
 def extract_hnr(sound):
     try:
         harmonicity = sound.to_harmonicity_cc()
         return call(harmonicity, "Get mean", 0, 0)
-    except: return np.nan
+    except:
+        return np.nan
 
 def extract_jitter_shimmer(sound, pitch_floor=75, pitch_ceiling=600):
     jitter, shimmer = np.nan, np.nan
@@ -44,12 +48,17 @@ def extract_jitter_shimmer(sound, pitch_floor=75, pitch_ceiling=600):
         report = call(point_process, "Get report", 0, 0, 0.0001, 0.02, 0.01, 0.0001, 0.02, 0.01, 0.02, 0.4)
         for line in report.split("\n"):
             if "Jitter (local):" in line:
-                try: jitter = float(line.split(":")[1].strip().split(" ")[0])
-                except: pass
+                try:
+                    jitter = float(line.split(":")[1].strip().split(" ")[0])
+                except:
+                    pass
             elif "Shimmer (local, dB):" in line:
-                try: shimmer = float(line.split(":")[1].strip().split(" ")[0])
-                except: pass
-    except: pass
+                try:
+                    shimmer = float(line.split(":")[1].strip().split(" ")[0])
+                except:
+                    pass
+    except:
+        pass
     return {"jitter_local": jitter, "shimmer_local_db": shimmer}
 
 def analyze_recording(sound):
@@ -77,12 +86,12 @@ def generate_report(params, file_name):
     jitter = params["jitter_local"]
     shimmer = params["shimmer_local_db"]
     if not np.isnan(jitter):
-        jitter_str = f"{jitter*100:.2f}%" if jitter < 0.1 else f"{jitter:.4f}"
+        jitter_str = f"{jitter * 100:.2f}%" if jitter < 0.1 else f"{jitter:.4f}"
         report += f"Jitter (local): {jitter_str}\n"
     else:
         report += "Jitter (local): Not available\n"
 
-    report += format_line("Shimmer (local, dB)", shimmer, "dB")
+    report += format_line("Shimmer (local)", shimmer, "dB")
 
     report += "\nInterpretation Notes:\n"
     report += "- ↑ F0 = higher pitch (stress, arousal); ↓ F0 = fatigue or low tone.\n"
@@ -93,36 +102,46 @@ def generate_report(params, file_name):
     return report
 
 def main():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    input_dir = os.path.join(base_dir, "test_audio")
-    output_dir = os.path.join(base_dir, "parselmouth_reports")
-    os.makedirs(output_dir, exist_ok=True)
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        input_dir = os.path.join(base_dir, "test_audio")
+        output_dir = os.path.join(base_dir, "parselmouth_reports")
+        os.makedirs(output_dir, exist_ok=True)
 
-    audio_files = [f for f in os.listdir(input_dir) if f.lower().endswith(".wav")]
-    if not audio_files:
-        print("❌ No .wav files found in test_audio.")
-        return
+        audio_files = [f for f in os.listdir(input_dir) if f.lower().endswith(".wav")]
+        if not audio_files:
+            print("❌ No .wav files found in test_audio.")
+            sys.exit(1)
 
-    for file in audio_files:
-        path = os.path.join(input_dir, file)
-        sound = load_audio(path)
-        if not sound:
-            print(f"❌ Skipping file: {file}")
-            continue
+        for file in audio_files:
+            path = os.path.join(input_dir, file)
+            sound = load_audio(path)
+            if not sound:
+                print(f"❌ Skipping file: {file}")
+                sys.exit(1)
 
-        params = analyze_recording(sound)
-        report = generate_report(params, file)
+            params = analyze_recording(sound)
+            report = generate_report(params, file)
 
-        filename_base = os.path.splitext(file)[0]
-        output_file = f"07_{filename_base}_parselmouth_parameter_profile.txt"
-        output_path = os.path.join(output_dir, output_file)
+            identifier_uuid = str(uuid.uuid4())
+            algorithm_number = "07"
+            algorithm_name = "parselmouth_parameter_profile"
+            output_file = f"{algorithm_number}_{identifier_uuid}_{algorithm_name}.txt"
+            output_path = os.path.join(output_dir, output_file)
 
-        with open(output_path, "w") as f:
-            f.write(report)
+            with open(output_path, "w") as f:
+                f.write(report)
 
-        print(f"✅ Report saved: {output_file}")
+            print(f"✅ Report saved: {output_file}")
+
+        sys.exit(0)
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
+
 
 

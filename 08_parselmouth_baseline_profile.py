@@ -2,26 +2,15 @@
 Solution 8: Comprehensive Baseline Acoustic Profile using Parselmouth
 
 This script loads a single audio file and extracts a comprehensive set of acoustic
-parameters using Parselmouth to create a baseline profile. This includes:
-- Mean, Min, Max Pitch (F0)
-- Standard Deviation of Pitch (F0)
-- Mean, Min, Max Intensity
-- Standard Deviation of Intensity
-- Jitter (local)
-- Shimmer (local, dB)
-- Harmonics-to-Noise Ratio (HNR)
-- Cepstral Peak Prominence (CPP)
-- Speech Rate (syllables per second - conceptual, as actual syllabification is complex)
-- Pause metrics (number of pauses, total pause duration, mean pause duration)
-- Formant Frequencies (F1, F2, F3 - mean values for voiced segments)
-
-It then generates a textual summary and saves it to a report file.
+parameters using Parselmouth to create a baseline profile.
 """
 
 import parselmouth
 from parselmouth.praat import call
 import numpy as np
 import os
+import sys
+import uuid
 
 def load_audio(audio_file_path):
     try:
@@ -77,37 +66,46 @@ def generate_report(filename, pitch, intensity):
     return report
 
 def main():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    input_dir = os.path.join(base_dir, "test_audio")
-    output_dir = os.path.join(base_dir, "parselmouth_reports")
-    os.makedirs(output_dir, exist_ok=True)
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        input_dir = os.path.join(base_dir, "test_audio")
+        output_dir = os.path.join(base_dir, "parselmouth_reports")
+        os.makedirs(output_dir, exist_ok=True)
 
-    audio_files = sorted([f for f in os.listdir(input_dir) if f.endswith(".wav")])
+        audio_files = sorted([f for f in os.listdir(input_dir) if f.endswith(".wav")])
 
-    if not audio_files:
-        print("❌ No .wav files found in test_audio.")
-        return
+        if not audio_files:
+            print("❌ No .wav files found in test_audio.")
+            sys.exit(1)
 
-    for fname in audio_files:
-        file_path = os.path.join(input_dir, fname)
-        sound = load_audio(file_path)
-        if not sound:
-            print(f"❌ Skipping file: {fname}")
-            continue
+        for fname in audio_files:
+            file_path = os.path.join(input_dir, fname)
+            sound = load_audio(file_path)
+            if not sound:
+                print(f"❌ Skipping file: {fname}")
+                sys.exit(1)
 
-        pitch = extract_pitch_profile(sound)
-        intensity = extract_intensity_profile(sound)
+            pitch = extract_pitch_profile(sound)
+            intensity = extract_intensity_profile(sound)
 
-        report = generate_report(fname, pitch, intensity)
+            report = generate_report(fname, pitch, intensity)
 
-        name_wo_ext = os.path.splitext(fname)[0]
-        output_filename = f"08_{name_wo_ext}_parselmouth_baseline_profile_report.txt"
-        output_path = os.path.join(output_dir, output_filename)
+            identifier_uuid = str(uuid.uuid4())
+            algorithm_number = "08"
+            algorithm_name = "parselmouth_baseline_profile"
+            output_filename = f"{algorithm_number}_{identifier_uuid}_{algorithm_name}.txt"
+            output_path = os.path.join(output_dir, output_filename)
 
-        with open(output_path, "w") as f:
-            f.write(report)
+            with open(output_path, "w") as f:
+                f.write(report)
 
-        print(f"✅ Report saved: {output_filename}")
+            print(f"✅ Report saved: {output_filename}")
+
+        sys.exit(0)
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

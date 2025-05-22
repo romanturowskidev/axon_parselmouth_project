@@ -1,9 +1,5 @@
 """
-# Roman Turowski wrote (16 of May 2025): I'm not sure that resalts from this code are OK, I suppose its need to be edited. For now just lest it as it is
-# But its work :)
-
-
-# Solution 3: Speech Fluency and Pause Analysis using Parselmouth
+Solution 3: Speech Fluency and Pause Analysis using Parselmouth
 
 This script loads an audio file, analyzes speech fluency by segmenting speech and silence,
 calculates speech/articulation rates (conceptually, as syllable count is external),
@@ -15,6 +11,8 @@ import parselmouth
 from parselmouth.praat import call
 import numpy as np
 import os
+import sys
+import uuid
 
 def load_audio(audio_file_path):
     try:
@@ -27,18 +25,19 @@ def segment_speech_silence(sound, silence_threshold_db_factor=0.3, min_pause_dur
     segments = []
     try:
         intensity = sound.to_intensity(minimum_pitch=100)
-        max_intensity = call(intensity, "Get maximum", 0, 0, "dB")
+        max_intensity = call(intensity, "Get maximum", 0, 0, "Parabolic")
         silence_threshold_db = max_intensity - 25 if not np.isnan(max_intensity) else -35
         silence_threshold_db = max(silence_threshold_db, -50)
 
-        num_frames = intensity.get_number_of_frames()
-        time_step = intensity.time_step
+        num_frames = call(intensity, "Get number of frames")
+        time_step = intensity.get_time_step()
+        start_time = intensity.get_start_time()
         current_label = None
-        segment_start = intensity.start_time
+        segment_start = start_time
 
         for i in range(num_frames):
-            frame_time = intensity.get_time_from_frame_number(i + 1)
-            frame_intensity = intensity.get_value_in_frame(i + 1)
+            frame_time = call(intensity, "Get time from frame number", i + 1)
+            frame_intensity = call(intensity, "Get value in frame", i + 1)
             label = "silence" if frame_intensity < silence_threshold_db else "speech"
 
             if current_label is None:
@@ -55,7 +54,7 @@ def segment_speech_silence(sound, silence_threshold_db_factor=0.3, min_pause_dur
 
         # Last segment
         if current_label:
-            segment_end = intensity.end_time
+            segment_end = intensity.get_end_time()
             duration = segment_end - segment_start
             if (current_label == "speech" and duration >= min_speech_duration_s) or \
                (current_label == "silence" and duration >= min_pause_duration_s):
@@ -110,33 +109,49 @@ def generate_fluency_report(metrics, audio_file_name):
     return report
 
 def main():
-    input_dir = "test_audio"
-    output_dir = "parselmouth_reports"
-    os.makedirs(output_dir, exist_ok=True)
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        input_dir = os.path.join(base_dir, "test_audio")
+        output_dir = os.path.join(base_dir, "parselmouth_reports")
+        os.makedirs(output_dir, exist_ok=True)
 
-    wav_files = [f for f in os.listdir(input_dir) if f.lower().endswith(".wav")]
-    if not wav_files:
-        print(f"No .wav files found in {input_dir}")
-        return
+        wav_files = [f for f in os.listdir(input_dir) if f.lower().endswith(".wav")]
+        if not wav_files:
+            print(f"No .wav files found in {input_dir}")
+            sys.exit(1)
 
-    for file in wav_files:
-        path = os.path.join(input_dir, file)
-        sound = load_audio(path)
-        if sound:
-            segments = segment_speech_silence(sound, min_pause_duration_s=0.1, min_speech_duration_s=0.1)
-            metrics = calculate_fluency_metrics(sound.get_total_duration(), segments, num_syllables_placeholder=20)
-            report = generate_fluency_report(metrics, file)
+        for file in wav_files:
+            path = os.path.join(input_dir, file)
+            sound = load_audio(path)
+            if sound:
+                segments = segment_speech_silence(sound, min_pause_duration_s=0.1, min_speech_duration_s=0.1)
+                metrics = calculate_fluency_metrics(sound.get_total_duration(), segments, num_syllables_placeholder=20)
+                report = generate_fluency_report(metrics, file)
 
-            report_name = f"03_{os.path.splitext(file)[0]}_fluency_report.txt"
-            report_path = os.path.join(output_dir, report_name)
-            with open(report_path, "w") as f:
-                f.write(report)
-            print(f"✅ Report saved: {report_path}")
-        else:
-            print(f"❌ Failed to process {file}")
+                identifier_uuid = str(uuid.uuid4())
+                algorithm_number = "03"
+                algorithm_name = "parselmouth_speech_fluency"
+                report_name = f"{algorithm_number}_{identifier_uuid}_{algorithm_name}.txt"
+                report_path = os.path.join(output_dir, report_name)
+
+                with open(report_path, "w") as f:
+                    f.write(report)
+
+                print(f"✅ Report saved: {report_path}")
+            else:
+                print(f"❌ Failed to process {file}")
+                sys.exit(1)
+
+        sys.exit(0)
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
+
+
 
 
 

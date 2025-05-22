@@ -15,7 +15,6 @@ SOLUTIONS=(
     "08_parselmouth_baseline_profile.py"
     "09_parselmouth_longitudinal_trend.py"
     "10_parselmouth_formant_vocal_tract.py"
-    "11_parselmouth_voice_clarity_with_CPP.py"
 )
 
 echo "Starting execution of all Parselmouth-based voice analysis solutions..."
@@ -25,19 +24,26 @@ do
     echo "----------------------------------------------------------------------"
     echo "Running: ${solution_script}"
     echo "----------------------------------------------------------------------"
+    
     if [ -f "${BASE_DIR}/${solution_script}" ]; then
         ${PYTHON_EXECUTABLE} "${BASE_DIR}/${solution_script}"
-        if [ $? -eq 0 ]; then
-            echo "Successfully executed ${solution_script}"
+        EXIT_CODE=$?
+        if [ $EXIT_CODE -eq 0 ]; then
+            echo "✅ Successfully executed ${solution_script}"
         else
-            echo "Error executing ${solution_script}. Please check the script and its dependencies."
+            echo "❌ Error executing ${solution_script} (exit code: $EXIT_CODE)"
+            echo "Stopping execution."
+            exit 1
         fi
     else
-        echo "Error: Script ${BASE_DIR}/${solution_script} not found."
+        echo "❌ Error: Script ${BASE_DIR}/${solution_script} not found."
+        echo "Stopping execution."
+        exit 1
     fi
+
     echo ""
 done
 
 echo "----------------------------------------------------------------------"
-echo "All Parselmouth-based solutions have been executed."
-
+echo "✅ All Parselmouth-based solutions executed successfully."
+exit 0

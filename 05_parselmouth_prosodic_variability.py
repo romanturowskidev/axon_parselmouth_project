@@ -3,12 +3,14 @@ Solution 5: Prosodic Variability Analysis using Parselmouth
 
 This script loads an audio file, extracts measures of pitch (F0) and intensity variability
 (standard deviations) using Parselmouth, discusses conceptual analysis of contours,
- generates a textual summary, and saves it to a report file.
+generates a textual summary, and saves it to a report file.
 """
 
 import parselmouth
 import numpy as np
 import os
+import sys
+import uuid
 
 def load_audio(audio_file_path):
     try:
@@ -69,33 +71,45 @@ def generate_prosodic_variability_report(sd_f0, sd_intensity, audio_file_name):
     return report
 
 def main():
-    input_dir = "test_audio"
-    output_dir = "parselmouth_reports"
-    os.makedirs(output_dir, exist_ok=True)
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        input_dir = os.path.join(base_dir, "test_audio")
+        output_dir = os.path.join(base_dir, "parselmouth_reports")
+        os.makedirs(output_dir, exist_ok=True)
 
-    audio_files = [f for f in os.listdir(input_dir) if f.lower().endswith(".wav")]
-    if not audio_files:
-        print("No audio files found in test_audio folder.")
-        return
+        audio_files = [f for f in os.listdir(input_dir) if f.lower().endswith(".wav")]
+        if not audio_files:
+            print("No audio files found in test_audio folder.")
+            sys.exit(1)
 
-    for filename in audio_files:
-        file_path = os.path.join(input_dir, filename)
-        sound = load_audio(file_path)
+        for filename in audio_files:
+            file_path = os.path.join(input_dir, filename)
+            sound = load_audio(file_path)
 
-        if sound:
-            sd_intensity = extract_intensity_variability(sound)
-            sd_f0 = extract_pitch_variability(sound)
-            report_content = generate_prosodic_variability_report(sd_f0, sd_intensity, filename)
+            if sound:
+                sd_intensity = extract_intensity_variability(sound)
+                sd_f0 = extract_pitch_variability(sound)
+                report_content = generate_prosodic_variability_report(sd_f0, sd_intensity, filename)
 
-            report_filename = f"05_{os.path.splitext(filename)[0]}_prosody_report.txt"
-            report_path = os.path.join(output_dir, report_filename)
+                identifier_uuid = str(uuid.uuid4())
+                algorithm_number = "05"
+                algorithm_name = "parselmouth_prosodic_variability"
+                report_filename = f"{algorithm_number}_{identifier_uuid}_{algorithm_name}.txt"
+                report_path = os.path.join(output_dir, report_filename)
 
-            with open(report_path, "w") as f:
-                f.write(report_content)
+                with open(report_path, "w") as f:
+                    f.write(report_content)
 
-            print(f"✅ Report saved: {report_path}")
-        else:
-            print(f"❌ Failed to process file: {filename}")
+                print(f"✅ Report saved: {report_path}")
+            else:
+                print(f"❌ Failed to process file: {filename}")
+                sys.exit(1)
+
+        sys.exit(0)
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

@@ -3,12 +3,14 @@ Solution 2: Hypophonia and Monotony Analysis using Parselmouth
 
 This script loads an audio file, extracts measures related to vocal intensity (hypophonia)
 and pitch/intensity variability (monotony) using the Parselmouth library,
- generates a textual summary, and saves it to a report file.
+generates a textual summary, and saves it to a report file.
 """
 
 import parselmouth
 import numpy as np
 import os
+import sys
+import uuid
 
 def load_audio(audio_file_path):
     try:
@@ -82,34 +84,46 @@ def generate_hypophonia_monotony_report(intensity_data, pitch_data, audio_file_n
     return report
 
 def main():
-    input_dir = "test_audio"
-    output_dir = "parselmouth_reports"
-    os.makedirs(output_dir, exist_ok=True)
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        input_dir = os.path.join(base_dir, "test_audio")
+        output_dir = os.path.join(base_dir, "parselmouth_reports")
+        os.makedirs(output_dir, exist_ok=True)
 
-    wav_files = [f for f in os.listdir(input_dir) if f.lower().endswith(".wav")]
+        wav_files = [f for f in os.listdir(input_dir) if f.lower().endswith(".wav")]
 
-    if not wav_files:
-        print(f"No .wav files found in {input_dir}")
-        return
+        if not wav_files:
+            print(f"No .wav files found in {input_dir}")
+            sys.exit(1)
 
-    for filename in wav_files:
-        audio_path = os.path.join(input_dir, filename)
-        sound = load_audio(audio_path)
+        for filename in wav_files:
+            audio_path = os.path.join(input_dir, filename)
+            sound = load_audio(audio_path)
 
-        if sound:
-            intensity = extract_intensity_features(sound)
-            pitch = extract_pitch_features(sound)
-            report = generate_hypophonia_monotony_report(intensity, pitch, filename)
+            if sound:
+                intensity = extract_intensity_features(sound)
+                pitch = extract_pitch_features(sound)
+                report = generate_hypophonia_monotony_report(intensity, pitch, filename)
 
-            output_filename = f"02_{os.path.splitext(filename)[0]}_hypophonia_monotony_report.txt"
-            output_path = os.path.join(output_dir, output_filename)
+                identifier_uuid = str(uuid.uuid4())
+                algorithm_number = "02"
+                algorithm_name = "parselmouth_hypophonia_monotony"
+                output_filename = f"{algorithm_number}_{identifier_uuid}_{algorithm_name}.txt"
+                output_path = os.path.join(output_dir, output_filename)
 
-            with open(output_path, "w") as f:
-                f.write(report)
+                with open(output_path, "w") as f:
+                    f.write(report)
 
-            print(f"✅ Report saved: {output_path}")
-        else:
-            print(f"❌ Skipped (cannot process): {filename}")
+                print(f"✅ Report saved: {output_path}")
+            else:
+                print(f"❌ Skipped (cannot process): {filename}")
+                sys.exit(1)
+
+        sys.exit(0)
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

@@ -2,16 +2,15 @@
 Solution 10: Formant and Vocal Tract Summary using Parselmouth
 
 This script loads an audio file, extracts mean formant frequencies (F1, F2, F3)
-for voiced segments using Parselmouth. It also conceptually discusses the
- Vowel Space Area (VSA) and Formant Centralization Ratio (FCR) as these are
- more complex to calculate directly without specific vowel annotations and further processing.
-It generates a textual summary and saves it to a report file.
+for voiced segments using Parselmouth and generates a textual summary.
 """
 
 import parselmouth
 from parselmouth.praat import call
 import numpy as np
 import os
+import sys
+import uuid
 
 def load_audio(audio_file_path):
     try:
@@ -75,13 +74,18 @@ def generate_formant_report(data, filename):
     return report
 
 def main():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    input_dir = os.path.join(base_dir, "test_audio")
-    output_dir = os.path.join(base_dir, "parselmouth_reports")
-    os.makedirs(output_dir, exist_ok=True)
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        input_dir = os.path.join(base_dir, "test_audio")
+        output_dir = os.path.join(base_dir, "parselmouth_reports")
+        os.makedirs(output_dir, exist_ok=True)
 
-    for filename in os.listdir(input_dir):
-        if filename.endswith(".wav"):
+        audio_files = [f for f in os.listdir(input_dir) if f.lower().endswith(".wav")]
+        if not audio_files:
+            print("❌ No .wav files found in test_audio.")
+            sys.exit(1)
+
+        for filename in audio_files:
             file_path = os.path.join(input_dir, filename)
             print(f"\n🎧 Analyzing: {filename}")
             sound = load_audio(file_path)
@@ -89,17 +93,26 @@ def main():
             if sound:
                 formant_data = extract_mean_formants_voiced(sound)
                 report = generate_formant_report(formant_data, filename)
-                report_filename = f"10_parselmouth_formant_{filename.replace('.wav', '')}_report.txt"
+
+                identifier_uuid = str(uuid.uuid4())
+                algorithm_number = "10"
+                algorithm_name = "parselmouth_formant_vocal_tract"
+                report_filename = f"{algorithm_number}_{identifier_uuid}_{algorithm_name}.txt"
                 report_path = os.path.join(output_dir, report_filename)
 
                 with open(report_path, "w") as f:
                     f.write(report)
 
-                print(f"✅ Report saved: {report_path}")
-                print("--- Preview ---")
-                print(report[:800])
+                print(f"✅ Report saved: {report_filename}")
             else:
                 print(f"❌ Failed to process file: {filename}")
+                sys.exit(1)
+
+        sys.exit(0)
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
